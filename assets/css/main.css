@@ -1191,12 +1191,11 @@ section,
 .about .about-images img {
   border-radius: 10px;
 }
-
 /*--------------------------------------------------------------
 # Clients Section
 --------------------------------------------------------------*/
 .clients {
-  padding: 20px 0;
+  padding: 40px 0;
 }
 
 .clients .client-logo {
@@ -1204,24 +1203,34 @@ section,
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  min-height: 120px;
 }
 
 .clients .client-logo img {
-  padding: 20px 40px;
-  max-width: 90%;
+  padding: 15px 25px;
+  max-width: 100%;
+  max-height: 100px;
+  width: auto;
+  height: auto;
   transition: 0.3s;
-  opacity: 0.5;
+  opacity: 0.6;
   filter: grayscale(100);
 }
 
 .clients .client-logo img:hover {
   filter: none;
   opacity: 1;
+  transform: scale(1.1);
 }
 
 @media (max-width: 640px) {
+  .clients .client-logo {
+    min-height: 100px;
+  }
+  
   .clients .client-logo img {
-    padding: 20px;
+    padding: 10px 15px;
+    max-height: 80px;
   }
 }
 
