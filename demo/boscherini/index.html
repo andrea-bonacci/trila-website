@@ -31,19 +31,8 @@
                         serif: ['"Playfair Display"', 'serif'],
                         sans: ['"Lato"', 'sans-serif'],
                     },
-                    animation: {
-                        'ken-burns': 'kenBurns 30s ease-in-out infinite alternate',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        kenBurns: {
-                            '0%': { transform: 'scale(1)' },
-                            '100%': { transform: 'scale(1.15)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
                     }
                 }
             }
@@ -51,10 +40,42 @@
     </script>
 
     <style>
-        /* Override base AOS settings for smoother feel */
-        body[data-aos-duration='1000'] [data-aos], 
-        [data-aos][data-aos][data-aos-duration='1000'] {
-            transition-duration: 1000ms;
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* NUOVA NAVBAR STYLE */
+        .nav-island {
+            background: rgba(253, 252, 246, 0.85); /* bosch-cream semitrasparente */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-island.scrolled {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            background: rgba(253, 252, 246, 0.95);
+            box-shadow: 0 10px 30px -10px rgba(47, 62, 52, 0.1); /* bosch-green shadow */
+        }
+
+        /* Link Hover Effect */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #9C6644; /* bosch-wood */
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 100%;
         }
 
         /* Stile Input Form */
@@ -69,97 +90,107 @@
             padding-left: 10px;
         }
         
-        /* Mobile Menu Transition */
+        /* Mobile Menu */
         #mobileMenu {
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-            max-height: 0;
+            transition: all 0.4s ease;
+            transform: translateY(-20px);
             opacity: 0;
-            overflow: hidden;
+            pointer-events: none;
         }
         #mobileMenu.open {
-            max-height: 300px;
+            transform: translateY(0);
             opacity: 1;
+            pointer-events: auto;
         }
     </style>
 </head>
 <body class="font-sans text-stone-700 bg-bosch-cream antialiased overflow-x-hidden">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-bosch-cream/90 backdrop-blur-md border-b border-stone-200 py-4 transition-all shadow-sm">
-        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+    <!-- NUOVA NAVBAR "ISLAND" -->
+    <!-- Posizionata fissa, ma staccata dal bordo superiore (mt-4) e con bordi arrotondati -->
+    <div class="fixed top-0 left-0 w-full z-50 flex justify-center px-4 pt-4 md:pt-6 transition-all duration-300" id="navContainer">
+        <nav class="nav-island w-full max-w-5xl rounded-full px-8 py-4 flex justify-between items-center shadow-glass" id="mainNav">
+            
             <!-- Logo -->
-            <a href="#" class="text-2xl font-serif font-bold text-bosch-green tracking-tight relative z-50">
-                Casa<span class="text-bosch-wood">Boscherini</span>.
+            <a href="#" class="text-2xl font-serif font-bold text-bosch-green tracking-tight relative z-50 flex items-center gap-2 group">
+                <!-- Icona Casa stilizzata -->
+                <span class="w-8 h-8 bg-bosch-green text-bosch-cream rounded-full flex items-center justify-center group-hover:bg-bosch-wood transition-colors">
+                    <span class="font-serif italic text-lg">B</span>
+                </span>
+                <span>Casa<span class="text-bosch-wood group-hover:text-bosch-green transition-colors">Boscherini</span>.</span>
             </a>
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest text-stone-600 items-center">
-                <a href="#storia" class="hover:text-bosch-wood transition-colors hover:underline decoration-bosch-wood decoration-2 underline-offset-4">La Storia</a>
-                <a href="#custodi" class="hover:text-bosch-wood transition-colors hover:underline decoration-bosch-wood decoration-2 underline-offset-4">I Cani</a>
-                <a href="#gallery" class="hover:text-bosch-wood transition-colors hover:underline decoration-bosch-wood decoration-2 underline-offset-4">La cucina</a>
-                <a href="#prenota" class="px-6 py-2 bg-bosch-green text-white rounded-full hover:bg-stone-800 transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
-                    Prenota Tavolo
+                <a href="#storia" class="nav-link hover:text-bosch-green transition-colors">La Storia</a>
+                <a href="#custodi" class="nav-link hover:text-bosch-green transition-colors">I Cani</a>
+                <a href="#gallery" class="nav-link hover:text-bosch-green transition-colors">La cucina</a>
+                
+                <!-- CTA Button -->
+                <a href="#prenota" class="ml-4 px-6 py-2.5 bg-bosch-green text-white rounded-full hover:bg-bosch-wood transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                    Prenota
                 </a>
             </div>
             
             <!-- Mobile Menu Button -->
-            <button onclick="toggleMobileMenu()" class="md:hidden text-bosch-green relative z-50 focus:outline-none">
+            <button onclick="toggleMobileMenu()" class="md:hidden text-bosch-green relative z-50 p-2 hover:bg-stone-100 rounded-full transition-colors">
                 <i data-lucide="menu" id="menuIcon"></i>
             </button>
-        </div>
+        </nav>
+    </div>
 
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="md:hidden bg-bosch-cream w-full border-b border-stone-200 absolute top-full left-0 shadow-xl">
-            <div class="flex flex-col p-6 space-y-6 text-center text-sm font-bold uppercase tracking-widest text-stone-600">
-                <a href="#storia" onclick="toggleMobileMenu()" class="hover:text-bosch-wood">La Storia</a>
-                <a href="#custodi" onclick="toggleMobileMenu()" class="hover:text-bosch-wood">I Cani</a>
-                <a href="#gallery" onclick="toggleMobileMenu()" class="hover:text-bosch-wood">Gallery</a>
-                <a href="#prenota" onclick="toggleMobileMenu()" class="text-bosch-green">Prenota Tavolo</a>
-            </div>
+    <!-- Mobile Menu Dropdown (Separato dalla navbar principale) -->
+    <div id="mobileMenu" class="fixed top-24 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl z-40 border border-white/20 p-6 md:hidden text-center">
+        <div class="flex flex-col space-y-6 text-sm font-bold uppercase tracking-widest text-stone-600">
+            <a href="#storia" onclick="toggleMobileMenu()" class="hover:text-bosch-wood py-2 border-b border-stone-100">La Storia</a>
+            <a href="#custodi" onclick="toggleMobileMenu()" class="hover:text-bosch-wood py-2 border-b border-stone-100">I Cani</a>
+            <a href="#gallery" onclick="toggleMobileMenu()" class="hover:text-bosch-wood py-2 border-b border-stone-100">Gallery</a>
+            <a href="#prenota" onclick="toggleMobileMenu()" class="text-white/95 bg-bosch-green hover:bg-bosch-wood py-2 border-b border-bosch-wood rounded-xl">Prenota Tavolo</a>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
+    <!-- Hero Section (Tornata classica come piace a te, ma con animazione Ken Burns leggera) -->
     <header class="relative h-screen flex items-center justify-center px-6 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <!-- Ken Burns Effect applied here -->
             <img src="img/hero.jpg" 
-                 class="w-full h-full object-cover brightness-50 animate-ken-burns will-change-transform" alt="Tavolo Rustico">
+                 class="w-full h-full object-cover brightness-50 scale-100 animate-[pulse_1s_ease-in-out] hover:scale-105 transition-transform duration-[10s]" alt="Tavolo Rustico">
+            <!-- Nota: Ho rimesso l'immagine classica scura che ti piaceva -->
         </div>
 
         <div class="relative z-10 text-center max-w-4xl text-white mt-10">
             <div data-aos="fade-up" data-aos-duration="1200">
-                <p class="font-serif italic text-2xl text-bosch-sage mb-4 tracking-wide">Un solo tavolo. Un'esperienza unica.</p>
-                <h1 class="text-5xl md:text-7xl font-serif font-bold mb-8 leading-tight drop-shadow-lg">
+                <p class="font-serif italic text-2xl text-bosch-sage mb-2">Un solo tavolo. Un'esperienza unica.</p>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold mb-8 leading-tight">
                     L'Anima Rustica<br/><span class="text-stone-300">incontra il Gourmet</span>
                 </h1>
-                <p class="text-stone-200 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed opacity-90">
+                <p class="text-stone-200 text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 leading-relaxed">
                     Benvenuti nella nostra casa di campagna. Dove il tempo rallenta, i sapori sono veri e l'accoglienza ha quattro zampe.
                 </p>
                 <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <a href="#prenota" class="px-10 py-4 bg-white text-bosch-green font-bold rounded-full hover:bg-bosch-sage hover:text-white transition-all duration-300 shadow-2xl hover:shadow-white/20 transform hover:-translate-y-1">
+                    <a href="#prenota" class="px-8 py-4 bg-white text-bosch-green font-bold rounded-full hover:bg-bosch-sage hover:text-white transition-all duration-300 shadow-xl">
                         Verifica Disponibilità
                     </a>
                 </div>
             </div>
         </div>
         
-        <div class="absolute bottom-10 animate-float text-white/60">
-            <i data-lucide="chevron-down" class="w-10 h-10"></i>
+        <div class="absolute bottom-8 animate-bounce text-white/50">
+            <i data-lucide="chevron-down" class="w-8 h-8"></i>
         </div>
     </header>
 
-    <!-- La Storia -->
-    <section id="storia" class="py-24 bg-bosch-cream overflow-hidden">
+    <!-- La Storia (Tuo contenuto originale + AOS) -->
+    <section id="storia" class="py-24 bg-bosch-cream">
         <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-            <div class="relative" data-aos="fade-right" data-aos-duration="1200">
+            <div class="relative" data-aos="fade-right">
                 <div class="absolute -top-4 -left-4 w-full h-full border-2 border-bosch-wood rounded-tr-3xl rounded-bl-3xl z-0"></div>
                 <img src="img/interno2.jpg" 
                      alt="Interno Casa" 
-                     class="relative z-10 shadow-2xl rounded-tr-3xl rounded-bl-3xl w-full h-[500px] object-cover transition-transform duration-700 hover:scale-[1.02]">
+                     class="relative z-10 shadow-xl rounded-tr-3xl rounded-bl-3xl w-full h-[500px] object-cover hover:scale-[1.02] transition-transform duration-500">
             </div>
 
-            <div data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+            <div data-aos="fade-left">
                 <span class="text-bosch-wood font-bold uppercase tracking-widest text-xs mb-2 block">Chi Siamo</span>
                 <h2 class="text-bosch-green font-serif text-4xl md:text-5xl mb-6 leading-tight">Più che un ristorante,<br/>è casa nostra.</h2>
                 <p class="text-stone-600 mb-6 leading-relaxed text-lg font-light">
@@ -168,7 +199,7 @@
                 <p class="text-stone-600 mb-8 leading-relaxed text-lg font-light">
                     In cucina trasformiamo ingredienti poveri in piatti gourmet, curando ogni dettaglio con amore. È un lusso semplice, fatto di silenzio e sapori autentici.
                 </p>
-                <div class="flex items-center space-x-4 border-l-4 border-bosch-sage pl-6">
+                <div class="flex items-center space-x-4">
                     <div class="font-serif italic text-bosch-green text-xl">La Famiglia Boscherini</div>
                 </div>
             </div>
@@ -176,37 +207,37 @@
     </section>
 
     <!-- I Tre Labrador -->
-    <section id="custodi" class="py-24 bg-white border-y border-stone-100">
+    <section id="custodi" class="py-20 bg-white border-y border-stone-100">
         <div class="max-w-5xl mx-auto px-6 text-center">
-            <div data-aos="fade-up" data-aos-duration="1000">
+            <div data-aos="fade-up">
                 <h2 class="font-serif text-3xl md:text-4xl text-bosch-green mb-4">I veri padroni di casa</h2>
-                <p class="text-stone-500 mb-16 max-w-xl mx-auto text-lg font-light">L'accoglienza a Casa Boscherini non sarebbe la stessa senza le nostre tre code scodinzolanti.</p>
+                <p class="text-stone-500 mb-12 max-w-xl mx-auto">L'accoglienza a Casa Boscherini non sarebbe la stessa senza le nostre tre code scodinzolanti.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <!-- Beppe -->
                 <div class="group cursor-pointer" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-2 group-hover:border-bosch-wood transition-all duration-500 relative">
-                        <img src="img/beppe.jpg" class="w-full h-full object-cover rounded-full transform group-hover:scale-110 transition-transform duration-700" alt="Labrador 1">
+                    <div class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-1 group-hover:border-bosch-wood transition-colors">
+                        <img src="img/beppe.jpg" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500" alt="Labrador 1">
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-bosch-green group-hover:text-bosch-wood transition-colors">Beppe</h3>
-                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-2">Il Sommelier</p>
+                    <h3 class="text-xl font-serif font-bold text-bosch-green">Beppe</h3>
+                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-1">Il Sommelier</p>
                 </div>
                 <!-- Piera -->
-                <div class="group cursor-pointer" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-2 group-hover:border-bosch-wood transition-all duration-500 relative">
-                        <img src="img/piera.jpg" class="w-full h-full object-cover rounded-full transform group-hover:scale-110 transition-transform duration-700" alt="Labrador 2">
+                <div class="group cursor-pointer" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-1 group-hover:border-bosch-wood transition-colors">
+                        <img src="img/piera.jpg" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500" alt="Labrador 2">
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-bosch-green group-hover:text-bosch-wood transition-colors">Piera</h3>
-                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-2">La Regina</p>
+                    <h3 class="text-xl font-serif font-bold text-bosch-green">Piera</h3>
+                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-1">La Regina</p>
                 </div>
-                <!-- Giotto -->
-                <div class="group cursor-pointer" data-aos="zoom-in" data-aos-delay="500">
-                    <div class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-2 group-hover:border-bosch-wood transition-all duration-500 relative">
-                        <img src="img/vanda.jpg" class="w-full h-full object-cover rounded-full transform group-hover:scale-110 transition-transform duration-700" alt="Labrador 3">
+                <!-- Vanda -->
+                <div class="group cursor-pointer" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bosch-sage/20 p-1 group-hover:border-bosch-wood transition-colors">
+                        <img src="img/vanda.jpg" class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500" alt="Labrador 3">
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-bosch-green group-hover:text-bosch-wood transition-colors">Vanda</h3>
-                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-2">L'Assaggiatrice</p>
+                    <h3 class="text-xl font-serif font-bold text-bosch-green">Vanda</h3>
+                    <p class="text-xs text-stone-400 uppercase tracking-widest mt-1">L'Assaggiatrice</p>
                 </div>
             </div>
         </div>
@@ -215,7 +246,7 @@
     <!-- GALLERY -->
     <section id="gallery" class="py-24 bg-stone-50">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16" data-aos="fade-down" data-aos-duration="1000">
+            <div class="text-center mb-16" data-aos="fade-down">
                 <span class="text-bosch-wood font-bold uppercase tracking-widest text-xs">Qualche piatto</span>
                 <h2 class="text-4xl md:text-5xl font-serif text-bosch-green mt-2">I Nostri Sapori</h2>
                 <p class="text-stone-500 max-w-lg mx-auto mt-4 font-light">
@@ -223,64 +254,31 @@
                 </p>
             </div>
 
-            <!-- Griglia Gallery -->
+            <!-- Griglia Gallery (Stesse immagini, ma con AOS) -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                <!-- Helper per le card -->
-                <!-- Card Img -->
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="0">
-                    <img src="img/piatto1.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="0">
+                    <img src="img/piatto1.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 1">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
-                    <img src="img/piatto2.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                    <img src="img/piatto2.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 2">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
-                    <img src="img/piatto3.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                    <img src="img/piatto3.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 3">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="300">
-                    <img src="img/piatto4.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="300">
+                    <img src="img/piatto4.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 4">
                 </div>
-
-                 <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="400">
-                    <img src="img/piatto5.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                     <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="400">
+                    <img src="img/piatto5.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 5">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="500">
-                    <img src="img/piatto6.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                     <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer" data-aos="fade-up" data-aos-delay="500">
+                    <img src="img/piatto6.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 6">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="500">
-                    <img src="img/piatto7.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                     <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="600">
+                    <img src="img/piatto7.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 7">
                 </div>
-
-                <div class="relative overflow-hidden rounded-xl h-72 shadow-lg group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="500">
-                    <img src="img/piatto8.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Piatto">
-                     <div class="absolute inset-0 bg-gradient-to-t from-bosch-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                        <span class="text-white font-serif italic text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Nome Piatto</span>
-                    </div>
+                <div class="overflow-hidden rounded-xl h-64 shadow-md group cursor-pointer hidden md:block" data-aos="fade-up" data-aos-delay="700">
+                    <img src="img/piatto8.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Piatto 8">
                 </div>
             </div>
         </div>
@@ -288,53 +286,48 @@
 
     <!-- PRENOTAZIONE -->
     <section id="prenota" class="py-32 bg-bosch-green text-white relative overflow-hidden">
-        <!-- Abstract Background Shapes -->
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-stone-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-black/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-stone-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/20 rounded-full blur-[80px] pointer-events-none"></div>
 
         <div class="max-w-5xl mx-auto px-6 relative z-10">
             <div class="grid md:grid-cols-2 gap-16">
                 <!-- Info -->
-                <div data-aos="fade-right" data-aos-duration="1000">
+                <div data-aos="fade-right">
                     <h2 class="text-5xl font-serif mb-6">Prenota il <br/>Tavolo Unico.</h2>
                     <p class="text-bosch-sage text-lg mb-10 font-light">
                         Il calendario è spesso pieno, ma ogni tanto si libera una data. Cerca il tuo giorno fortunato.
                     </p>
 
-                    <div class="space-y-8">
-                        <div class="flex items-start group">
-                            <div class="p-4 bg-white/5 border border-white/10 rounded-full mr-5 group-hover:bg-bosch-wood group-hover:text-white transition-colors duration-300">
-                                <i data-lucide="calendar-check" class="text-bosch-sage group-hover:text-white"></i>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="p-3 bg-white/10 rounded-full mr-4">
+                                <i data-lucide="calendar-check" class="text-bosch-wood"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-lg">Una sola prenotazione</h4>
-                                <p class="text-sm text-stone-300 mt-1 font-light">Tutta la casa è per voi.</p>
+                                <h4 class="font-bold">Una sola prenotazione</h4>
+                                <p class="text-sm text-stone-300">Tutta la casa è per voi.</p>
                             </div>
                         </div>
-                        <div class="flex items-start group">
-                            <div class="p-4 bg-white/5 border border-white/10 rounded-full mr-5 group-hover:bg-bosch-wood group-hover:text-white transition-colors duration-300">
-                                <i data-lucide="clock" class="text-bosch-sage group-hover:text-white"></i>
+                        <div class="flex items-start">
+                            <div class="p-3 bg-white/10 rounded-full mr-4">
+                                <i data-lucide="clock" class="text-bosch-wood"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-lg">Nessuna fretta</h4>
-                                <p class="text-sm text-stone-300 mt-1 font-light">Arrivate per l'aperitivo, restate finché volete.</p>
+                                <h4 class="font-bold">Nessuna fretta</h4>
+                                <p class="text-sm text-stone-300">Arrivate per l'aperitivo, restate finché volete.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Calendar & Form -->
-                <div class="bg-white text-stone-800 rounded-3xl p-8 shadow-2xl relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
-                    
-                    <!-- Decorazione angolo -->
-                    <div class="absolute -top-3 -right-3 w-20 h-20 bg-bosch-sage/20 rounded-full blur-xl"></div>
-
+                <div class="bg-white text-stone-800 rounded-3xl p-8 shadow-2xl" data-aos="fade-left">
                     <div id="calendarView">
                         <div class="flex justify-between items-center mb-6 border-b border-stone-100 pb-4">
                             <h4 class="font-serif text-xl font-bold text-bosch-green" id="currentMonthDisplay">Gennaio 2026</h4>
                             <div class="flex gap-2">
-                                <button onclick="changeMonth(-1)" class="p-2 hover:bg-stone-100 rounded-full transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                                <button onclick="changeMonth(1)" class="p-2 hover:bg-stone-100 rounded-full transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                                <button onclick="changeMonth(-1)" class="p-2 hover:bg-stone-100 rounded-full"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                <button onclick="changeMonth(1)" class="p-2 hover:bg-stone-100 rounded-full"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                             </div>
                         </div>
                         <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-stone-400 mb-2">
@@ -349,7 +342,7 @@
 
                     <div id="bookingForm" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div class="flex items-center mb-6">
-                            <button onclick="backToCalendar()" class="text-stone-400 hover:text-stone-800 mr-4 transition-colors">
+                            <button onclick="backToCalendar()" class="text-stone-400 hover:text-stone-800 mr-4">
                                 <i data-lucide="arrow-left"></i>
                             </button>
                             <div>
@@ -365,7 +358,7 @@
                                 </div>
                                 <div>
                                     <label class="text-xs font-bold uppercase text-stone-400">Ospiti</label>
-                                    <select class="w-full py-2 form-input bg-transparent cursor-pointer">
+                                    <select class="w-full py-2 form-input bg-transparent">
                                         <option>2 Persone</option>
                                         <option>3 Persone</option>
                                         <option>4 Persone</option>
@@ -374,7 +367,7 @@
                                 </div>
                                 <div>
                                     <label class="text-xs font-bold uppercase text-stone-400">Orario</label>
-                                    <select class="w-full py-2 form-input bg-transparent cursor-pointer">
+                                    <select class="w-full py-2 form-input bg-transparent">
                                         <option>12:30 (Pranzo)</option>
                                         <option>20:00 (Cena)</option>
                                     </select>
@@ -384,11 +377,11 @@
                                     <textarea class="w-full py-2 form-input resize-none" rows="2" placeholder="Vegetariani, celiaci, ecc..."></textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full py-4 bg-bosch-green text-white font-bold rounded-xl hover:bg-stone-800 transition-all shadow-lg hover:shadow-xl transform active:scale-95">Invia Richiesta</button>
+                            <button type="submit" class="w-full py-4 bg-bosch-green text-white font-bold rounded-xl hover:bg-stone-800 transition-colors shadow-lg">Invia Richiesta</button>
                         </form>
                     </div>
                     
-                    <div id="successMessage" class="hidden text-center py-10 animate-in zoom-in duration-300">
+                    <div id="successMessage" class="hidden text-center py-10">
                         <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                             <i data-lucide="check" class="w-10 h-10"></i>
                         </div>
@@ -401,35 +394,44 @@
         </div>
     </section>
 
-    <footer class="bg-stone-900 text-stone-500 py-12 text-center text-sm border-t border-stone-800">
-        <p class="font-serif text-2xl text-white mb-4">Casa<span class="text-bosch-wood">Boscherini</span></p>
-        <div class="flex justify-center space-x-6 my-6">
-            <i data-lucide="instagram" class="w-6 h-6 hover:text-white cursor-pointer transition-colors transform hover:scale-110"></i>
-            <i data-lucide="facebook" class="w-6 h-6 hover:text-white cursor-pointer transition-colors transform hover:scale-110"></i>
+    <footer class="bg-stone-900 text-stone-500 py-10 text-center text-sm border-t border-stone-800">
+        <p class="font-serif text-xl text-white mb-2">Casa<span class="text-bosch-wood">Boscherini</span></p>
+        <div class="flex justify-center space-x-6 my-4">
+            <i data-lucide="instagram" class="w-5 h-5 hover:text-white cursor-pointer transition-colors"></i>
+            <i data-lucide="facebook" class="w-5 h-5 hover:text-white cursor-pointer transition-colors"></i>
         </div>
         <p class="opacity-60">Loc. Campagna, Toscana - Made with love for Boscherini</p>
     </footer>
 
-    <!-- AOS JS -->
+    <!-- AOS & Lucide Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
     <script>
-        // Init AOS
-        AOS.init({
-            once: true, // Animation happens only once
-            offset: 100, // Trigger point
-            easing: 'ease-out-cubic',
-        });
-
+        AOS.init({ once: true, offset: 50, duration: 1000 });
         lucide.createIcons();
 
-        // --- Mobile Menu Logic ---
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            const navContainer = document.getElementById('navContainer');
+            
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+                navContainer.classList.remove('pt-6'); // Riduce padding superiore
+                navContainer.classList.add('pt-2');
+            } else {
+                nav.classList.remove('scrolled');
+                navContainer.classList.add('pt-6');
+                navContainer.classList.remove('pt-2');
+            }
+        });
+
+        // Mobile Menu
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('open');
         }
 
-        // --- Calendar Logic (Mantieni il tuo codice esistente, è ottimo) ---
+        // Calendar Logic (Tuo codice originale)
         const calendarGrid = document.getElementById('calendarGrid');
         const bookingForm = document.getElementById('bookingForm');
         const calendarView = document.getElementById('calendarView');
@@ -463,34 +465,27 @@
                     btn.classList.add("text-stone-300", "bg-stone-100", "cursor-not-allowed");
                     btn.disabled = true;
                 } else {
-                    btn.classList.add("hover:bg-bosch-green", "hover:text-white", "text-stone-700", "font-bold", "bg-white", "border", "border-stone-100", "hover:scale-110");
+                    btn.classList.add("hover:bg-bosch-green", "hover:text-white", "text-stone-700", "font-bold", "bg-white", "border", "border-stone-100");
                     btn.onclick = () => openForm(i, monthNames[month]);
                 }
                 calendarGrid.appendChild(btn);
             }
         }
 
-        function changeMonth(delta) {
-            date.setMonth(date.getMonth() + delta);
-            renderCalendar();
-        }
-
+        function changeMonth(delta) { date.setMonth(date.getMonth() + delta); renderCalendar(); }
         function openForm(day, month) {
             selectedDateDisplay.innerText = `${day} ${month}`;
             calendarView.classList.add('hidden');
             bookingForm.classList.remove('hidden');
         }
-
         function backToCalendar() {
             bookingForm.classList.add('hidden');
             calendarView.classList.remove('hidden');
         }
-
         function submitForm() {
             bookingForm.classList.add('hidden');
             successMessage.classList.remove('hidden');
         }
-
         renderCalendar();
     </script>
 </body>
